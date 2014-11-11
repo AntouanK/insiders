@@ -38,6 +38,7 @@
 
 .img-circle {
   border-radius: 50%;
+  border: 1px solid #181819;
 }
 
 .middle-section {
