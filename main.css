@@ -11,11 +11,14 @@
 
 .bottom-description {
   text-transform: uppercase;
+  font-size: 13px;
 }
 
 .footer{
   height: 20px;
+  padding: 0 10px
 }
+
 .left-footer {
   float: left;
   font-size: 10px;
@@ -25,4 +28,34 @@
   text-transform: uppercase;
   float: right;
   font-size: 10px;
+}
+
+.main-image {
+  width: 100%;
+}
+
+.img-circle {
+  border-radius: 50%;
+}
+
+.middle-section {
+  position: relative;
+  margin-bottom:  40px;
+  text-align: center;
+}
+
+.middle-section hr {
+  margin: 2px 0;
+}
+
+.middle-section .img-circle {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  top: -34px;
+  margin-left: -32px;
+}
+
+.location-text {
+  font-size: 18px;
 }
