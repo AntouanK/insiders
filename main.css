@@ -1,0 +1,28 @@
+
+.paper-box {
+  width: 285px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgb(80,80,80);
+}
+
+.description-content {
+  text-align: center;
+}
+
+.bottom-description {
+  text-transform: uppercase;
+}
+
+.footer{
+  height: 20px;
+}
+.left-footer {
+  float: left;
+  font-size: 10px;
+}
+
+.right-footer {
+  text-transform: uppercase;
+  float: right;
+  font-size: 10px;
+}
