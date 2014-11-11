@@ -63,6 +63,11 @@
 
       });
 
+      if(possibleMatches.length === 0){
+        outputMessage('Wrong input');
+        return false;
+      }
+
       //  sort the timestamps we got, and the first one is the smallest
       //  so it's the earliest date
       possibleMatches.sort(function(a, b) {
