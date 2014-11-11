@@ -1,6 +1,5 @@
 
-
-(function(){
+(function() {
 
   'use strict';
 
@@ -9,102 +8,168 @@
       outputMessageEle,
       validateInput,
       getInput,
-      outputMessage;
+      outputMessage,
+      dateToTimestamp,
+      permute;
 
-  //  grab the DOM elements
-  inputDateEle =
-  document.querySelector('input[name="input-date"]');
+  //  when the DOM is ready...
+  window.onload = function() {
 
-  submitBtn =
-  document.querySelector('input[name="submit-button"]');
+    //  grab the DOM elements
+    inputDateEle =
+    document.querySelector('input[name="input-date"]');
 
-  outputMessageEle =
-  document.querySelector('#result-date');
+    inputDateEle.focus();
+
+    submitBtn =
+    document.querySelector('input[name="submit-button"]');
+
+    outputMessageEle =
+    document.querySelector('#result-date');
+
+    //  attach a handler to the button click
+    submitBtn.onclick = function() {
+
+      var inputValue,
+          inputDigits,
+          isValid,
+          earliestDate,
+          possibleMatches = [];
+
+      inputValue = getInput();
+      inputDigits = validateInput(inputValue);
+      isValid = !!inputDigits;
+
+      if(!isValid) {
+        outputMessage('Wrong input');
+        return true;
+      }
+
+      //  make all the possible combinations
+      permute(inputDigits)
+      .forEach(function(combination) {
+
+        //  for each one, try to get a Date timestamp
+        var possibleDate = dateToTimestamp.apply(null, combination);
+
+        if(
+          !isNaN(possibleDate) &&
+          possibleMatches.indexOf(possibleDate) === -1
+        ) {
+          //  if that combination produced a timestamp, save it
+          possibleMatches
+          .push(possibleDate);
+        }
+
+      });
+
+      //  sort the timestamps we got, and the first one is the smallest
+      //  so it's the earliest date
+      possibleMatches.sort(function(a, b) {
+        a = +a;
+        b = +b;
+        if (a > b) {
+          return 1;
+        }
+        if (a < b) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+      });
+
+      earliestDate =
+      new Date(possibleMatches[0]);
 
 
+      //  display the result
+      outputMessageEle.textContent =
+      '( ' + possibleMatches.length + ' possible date(s) found ) ' +
+      'earliest date is : ' + earliestDate.toString().slice(0, 15);
+    };
 
-  validateInput = function(stringDate){
+  };
+
+
+  validateInput = function(stringDate) {
 
     var matches,
         invalidDigits = false,
         yearFound = false;
 
-    if(typeof stringDate !== 'string' || stringDate === ''){
-      console.log('no value');
+    if(typeof stringDate !== 'string' || stringDate === '') {
       return false;
     }
 
     matches = stringDate.match(/^(\d{1,4})\/(\d{1,4})\/(\d{1,4})$/);
 
-    if(matches === null){
-      console.log('wrong format');
+    if(matches === null) {
       return false;
     }
 
-    console.log(matches);
     //  check if we have a number with 3 digits ( invalid )
     matches
-    .slice(1,4)
-    .forEach(function(match){
+    .slice(1, 4)
+    .forEach(function(match) {
 
       var year;
 
-      if(match.length === 3){
+      if(match.length === 3) {
         invalidDigits = true;
       }
 
-      //  check also if we got the year
-      if(match.length === 4){
-        if(yearFound){
-          //  if year found already, we have an error
+      if(match.length === 4) {
+        if( match < 2000 || match > 2999 ){
           invalidDigits = true;
-          return false;
-        }
-
-        year = +match;
-
-        if(year < 2000 || year > 2999){
-
         }
       }
-      
+
     });
 
-    if(invalidDigits){
+    if(invalidDigits) {
       return false;
     }
 
-    return matches;
+    return matches.slice(1, 4);
   };
 
 
+  dateToTimestamp = function(a, b, c) {
 
-  getInput = function(){
+    var newDate = (new Date(a + '/' + b + '/' + c));
+    return newDate.getTime();
+  };
+
+  getInput = function() {
     return inputDateEle.value;
   };
 
-  outputMessage = function(message){
+  outputMessage = function(message) {
     outputMessageEle.textContent = message;
   };
 
-  submitBtn.onclick = function(){
 
-    var inputValue,
-        isValid;
+  permute = function(input) {
 
-    inputValue = getInput();
-    isValid = validateInput(inputValue);
+    var permArr = [],
+        usedChars = [];
 
-    if(isValid === false){
-      outputMessage('Wrong input');
-      return true;
+    function main() {
+      var i, ch;
+      for (i = 0; i < input.length; i++) {
+        ch = input.splice(i, 1)[0];
+        usedChars.push(ch);
+        if (input.length == 0) {
+          permArr.push(usedChars.slice());
+        }
+        main();
+        input.splice(i, 0, ch);
+        usedChars.pop();
+      }
+      return permArr;
     }
 
-    console.log('inputValue', inputValue);
-
-    outputMessageEle.textContent = 'test '+ isValid;
-  }
-
-
+    return main();
+  };
 
 })();
